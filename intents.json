@@ -1,0 +1,19 @@
+{"intents":[
+    {
+        "tag": "saludo",
+        "patterns": ["hola", "qué tal", "cómo estás", "saludos"],
+        "responses": ["Hola!", "Buenos días!", "¿Cómo estás?"]
+    },
+    {
+        "tag": "nombre",
+        "patterns": ["cómo es tu nombre", "cómo te llamas"],
+        "responses": ["Me llamo Animatron", "Mi nombre es Animatron"]
+    },
+    {
+        "tag": "historia",
+        "patterns": ["cuentame una historia","historia"],
+        "responses": ["Nuevamente hemos tenido que importar la librería time, para poder usar la función Sleep, y dar un tiempo entre el inicio de la conexión del puerto serie y el envío de datos"]
+    }
+]
+
+}
