@@ -77,6 +77,5 @@ while True:
     ints = predict_class(message)
     res = get_response(ints, intents)
     say(res)
-    time.sleep(1)
-    sArduino = PuertoSerie.write(b'0')
+
     

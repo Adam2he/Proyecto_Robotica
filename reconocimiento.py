@@ -1,6 +1,7 @@
 import face_recognition
 import cv2
 import numpy as np
+import serial
 
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
 # other example, but it includes some basic performance tweaks to make things run a lot faster:
@@ -10,6 +11,12 @@ import numpy as np
 # PLEASE NOTE: This example requires OpenCV (the `cv2` library) to be installed only to read from your webcam.
 # OpenCV is *not* required to use the face_recognition library. It's only required if you want to run this
 # specific demo. If you have trouble installing it, try any of the other demos that don't require it instead.
+
+abc="abcdefghijklmnopqrstuvwxyz"
+ABC="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+
+PuertoSerie = serial.Serial('COM8', 9600)
 
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
@@ -85,12 +92,20 @@ while True:
 
         # Draw a box around the face
         cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-        print(str(left)+","+str(top)+","+str(right)+","+str(bottom))
+        #print(str(left)+","+str(top)+","+str(right)+","+str(bottom))
+        punto=np.array([left+(right-left)/2,top+(bottom-top)/2]) #En x,y
+        centro=np.array([325,250]) #x,y
+        diferencia=punto-centro
+        calculo=np.array([100+diferencia[0]/centro[0],100+diferencia[1]/centro[1]])
+        sArduino = PuertoSerie.write((str(calculo)+"\n").encode())
+
 
         # Draw a label with a name below the face
         cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
         font = cv2.FONT_HERSHEY_DUPLEX
         cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+
+        print(str(PuertoSerie.readline()))
 
     # Display the resulting image
     cv2.imshow('Video', frame)
