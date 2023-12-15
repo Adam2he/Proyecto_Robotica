@@ -16,10 +16,10 @@ voice.setProperty('voice', voices[0].id)
 voice.setProperty('rate', 140)
 
 def say(text):
-  sArduino = PuertoSerie.write(b'1')
+  PuertoSerie.write(b'1')
   voice.say(text)
   voice.runAndWait()
-  sArduino = PuertoSerie.write(b'0')
+  PuertoSerie.write(b'0')
 
 
 import nltk

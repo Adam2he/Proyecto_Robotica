@@ -1,0 +1,85 @@
+#include <Servo.h>
+#include <stdlib.h>
+Servo ojo_der_x;
+Servo ojo_der_y;
+Servo ojo_izq_x;
+Servo ojo_izq_y;
+Servo ceja_der;
+Servo ceja_izq;
+Servo boca_abrir;
+Servo boca_del;
+float valor;
+
+int mover=0;
+String character="";
+String data="";
+
+void mover_boca(){
+  if(mover==1){
+    valor=random(0,100);
+    boca_del.write((valor/100)*50+100);   //100 a 150
+    boca_abrir.write((valor/100)*100+20); //20 a 120
+  }
+  if(mover==0){
+    boca_del.write(125);   //100 a 150
+    boca_abrir.write(70); //20 a 120
+  }
+}
+
+
+void setup()
+{
+  Serial.begin(9600);
+  //Pines de cada servo
+  ojo_der_x.attach(0);
+  ojo_der_y.attach(1);
+  ojo_izq_x.attach(2);
+  ojo_izq_y.attach(3);
+  ceja_der.attach(4);
+  ceja_izq.attach(5);
+  boca_abrir.attach(6);
+  boca_del.attach(7);
+
+  ojo_der_x.write(100);   //0 a 200
+  ojo_der_y.write(100);   //0 a 200
+
+  ojo_izq_x.write(100);   //0 a 200
+  ojo_izq_y.write(100);   //0 a 200
+
+  ceja_der.write(100);  //100 a 0
+  ceja_izq.write(100);   //100 a 200
+
+  boca_del.write(125);   //100 a 150
+  boca_abrir.write(70); //20 a 120
+
+}
+
+void loop()
+{
+  while (Serial.available())
+  {
+    char character = Serial.read();
+    if (character != '\n')
+    {
+      data.concat(character);
+    }
+    else
+    {
+      Serial.println((data[0]-48)*100+(data[1]-48)*10+(data[2]-48));
+      data = "";
+    }
+  }
+
+  ojo_der_x.write((data[0]-48)*100+(data[1]-48)*10+(data[2]-48));   //0 a 200
+  ojo_der_y.write((data[3]-48)*100+(data[4]-48)*10+(data[5]-48));   //0 a 200
+
+  ojo_izq_x.write((data[6]-48)*100+(data[7]-48)*10+(data[8]-48));   //0 a 200
+  ojo_izq_y.write((data[9]-48)*100+(data[10]-48)*10+(data[11]-48));   //0 a 200
+
+  ceja_der.write((data[12]-48)*100+(data[13]-48)*10+(data[14]-48));  //100 a 0
+  ceja_izq.write((data[15]-48)*100+(data[16]-48)*10+(data[17]-48));   //100 a 200
+
+  boca_del.write((data[18]-48)*100+(data[19]-48)*10+(data[20]-48));   //100 a 150
+  boca_abrir.write((data[21]-48)*100+(data[22]-48)*10+(data[23]-48)); //20 a 120
+
+}
