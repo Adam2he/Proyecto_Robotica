@@ -2,6 +2,7 @@ import face_recognition
 import cv2
 import numpy as np
 import serial
+import time
 
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
 # other example, but it includes some basic performance tweaks to make things run a lot faster:
@@ -13,8 +14,18 @@ import serial
 # specific demo. If you have trouble installing it, try any of the other demos that don't require it instead.
 
 
+ojo_der_x=str(100)
+ojo_der_y=str(100)
+ojo_izq_x=str(100)
+ojo_izq_y=str(100)
+ceja_der="050"
+ceja_izq=str(150)
+boca_abrir=str(125)
+boca_del="070"
 
-PuertoSerie = serial.Serial('COM8', 9600)
+
+
+PuertoSerie = serial.Serial('COM7', 9600)
 
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
@@ -94,8 +105,13 @@ while True:
         punto=np.array([left+(right-left)/2,top+(bottom-top)/2]) #En x,y
         centro=np.array([325,250]) #x,y
         diferencia=punto-centro
-        calculo=np.array([100+diferencia[0]/centro[0],100+diferencia[1]/centro[1]])
-        sArduino = PuertoSerie.write((str(calculo)+"\n").encode())
+        dato = ojo_der_x + ojo_der_y + ojo_izq_x + ojo_izq_y + ceja_der + ceja_izq + boca_abrir + boca_del
+        PuertoSerie.write(dato.encode())
+        time.sleep(1)
+        PuertoSerie.write(b'\n')
+        #calculo=np.array([100+diferencia[0]/centro[0],100+diferencia[1]/centro[1]])
+
+        #sArduino = PuertoSerie.write((str(calculo)+"\n").encode())
 
 
         # Draw a label with a name below the face
