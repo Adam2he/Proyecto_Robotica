@@ -31,22 +31,22 @@ PuertoSerie = serial.Serial('COM7', 9600)
 video_capture = cv2.VideoCapture(0)
 
 # Load a sample picture and learn how to recognize it.
-obama_image = face_recognition.load_image_file("obama.jpg")
-obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
+#obama_image = face_recognition.load_image_file("obama.jpg")
+#obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
 
 # Load a second sample picture and learn how to recognize it.
-biden_image = face_recognition.load_image_file("biden.jpg")
-biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
+#biden_image = face_recognition.load_image_file("biden.jpg")
+#biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
 
 # Create arrays of known face encodings and their names
-known_face_encodings = [
-    obama_face_encoding,
-    biden_face_encoding
-]
-known_face_names = [
-    "Barack Obama",
-    "Joe Biden"
-]
+#known_face_encodings = [
+#    obama_face_encoding,
+#    biden_face_encoding
+#]
+#known_face_names = [
+#    "Barack Obama",
+#    "Joe Biden"
+#]
 
 # Initialize some variables
 face_locations = []
@@ -73,7 +73,7 @@ while True:
         face_names = []
         for face_encoding in face_encodings:
             # See if the face is a match for the known face(s)
-            matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
+            #matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
             name = "Unknown"
 
             # # If a match was found in known_face_encodings, just use the first one.
@@ -82,10 +82,10 @@ while True:
             #     name = known_face_names[first_match_index]
 
             # Or instead, use the known face with the smallest distance to the new face
-            face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
-            best_match_index = np.argmin(face_distances)
-            if matches[best_match_index]:
-                name = known_face_names[best_match_index]
+            #face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
+            #best_match_index = np.argmin(face_distances)
+            #if matches[best_match_index]:
+            #    name = known_face_names[best_match_index]
 
             face_names.append(name)
 
@@ -106,10 +106,10 @@ while True:
         centro=np.array([325,250]) #x,y
         diferencia=punto-centro
         dato = ojo_der_x + ojo_der_y + ojo_izq_x + ojo_izq_y + ceja_der + ceja_izq + boca_abrir + boca_del
-        PuertoSerie.write(dato.encode())
-        time.sleep(1)
-        PuertoSerie.write(b'\n')
-        #calculo=np.array([100+diferencia[0]/centro[0],100+diferencia[1]/centro[1]])
+        #PuertoSerie.write(dato.encode())
+        #time.sleep(1)
+        #PuertoSerie.write(b'\n')
+        calculo=np.array([100+diferencia[0]*100/centro[0],100+diferencia[1]*100/centro[1]])
 
         #sArduino = PuertoSerie.write((str(calculo)+"\n").encode())
 
@@ -119,10 +119,14 @@ while True:
         font = cv2.FONT_HERSHEY_DUPLEX
         cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
-        print(str(PuertoSerie.readline()))
+        ojo_der_x = str(calculo[0])
+        ojo_der_y = str(calculo[1])
+        ojo_izq_x = str(calculo[0])
+        ojo_izq_y = str(calculo[1])
+        print(calculo)
 
     # Display the resulting image
-    cv2.imshow('Video', frame)
+    #cv2.imshow('Video', frame)
 
     # Hit 'q' on the keyboard to quit!
     if cv2.waitKey(1) & 0xFF == ord('q'):
