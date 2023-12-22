@@ -65,10 +65,10 @@ void loop()
     }
     else
     {
-      Serial.println((data[0]-48)*100+(data[1]-48)*10+(data[2]-48));
       data = "";
     }
   }
+  if(data[24]=='1' && data[19]!='a'){
 
   ojo_der_x.write((data[0]-48)*100+(data[1]-48)*10+(data[2]-48));   //0 a 200
   ojo_der_y.write((data[3]-48)*100+(data[4]-48)*10+(data[5]-48));   //0 a 200
@@ -79,7 +79,19 @@ void loop()
   ceja_der.write((data[12]-48)*100+(data[13]-48)*10+(data[14]-48));  //100 a 0
   ceja_izq.write((data[15]-48)*100+(data[16]-48)*10+(data[17]-48));   //100 a 200
 
-  boca_del.write((data[18]-48)*100+(data[19]-48)*10+(data[20]-48));   //100 a 150
-  boca_abrir.write((data[21]-48)*100+(data[22]-48)*10+(data[23]-48)); //20 a 120
+  boca_abrir.write((data[18]-48)*100+(data[19]-48)*10+(data[20]-48));    //20 a 120
+  boca_del.write((data[21]-48)*100+(data[22]-48)*10+(data[23]-48));  //100 a 150
+  }
+  else if(data[24]=='1' && data[19]=='a'){
+    while(Serial.read()!='b'){
+      valor=random(0,100);
+      boca_del.write((valor/100)*50+100);   //100 a 150
+      boca_abrir.write((valor/100)*100+20); //20 a 120
+      delay(200);
+    }
 
-}
+
+    }
+
+  }
+
