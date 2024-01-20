@@ -24,7 +24,7 @@ boca_del="150"
 
 PuertoSerie = serial.Serial('COM8', 9600)
 
-openai.api_key = "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"
+openai.api_key = "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"
 # Contexto del asistente
 context = {"role": "system",
             "content": "Eres una cabeza robótica llamada Animatrón."}
@@ -76,8 +76,8 @@ reconocido = False
 
 encontrado=0
 while not reconocido:
-    boca_abrir = str(125)
-    boca_del = "070"
+    boca_abrir = str(120)
+    boca_del = "150"
     PuertoSerie.write(b'\n')
     ret, frame = video_capture.read()
     small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
@@ -95,6 +95,7 @@ while not reconocido:
             name = known_face_names[first_match_index]
             reconocido=True
             say("Hola "+ known_face_names[matches.index(True)])
+            cara=known_face_names[matches.index(True)]
             encontrado=1
         face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
         best_match_index = np.argmin(face_distances)
@@ -102,6 +103,7 @@ while not reconocido:
             name = known_face_names[best_match_index]
             reconocido = True
             say("Hola " + known_face_names[matches.index(True)])
+            cara=known_face_names[matches.index(True)]
             encontrado=2
         if encontrado==0:
             known_face_encodings.append(face_encodings[0])
@@ -121,6 +123,7 @@ while not reconocido:
                         known_face_names.append(str(comando))
                         reconocido = True
                         say("Encantado de conocerte,"+comando)
+                        cara=comando
                 except:
                     say("No te he entendido")
 
@@ -133,8 +136,8 @@ bottom = 296
 left = 180
 
 while True:
-    boca_abrir = str(125)
-    boca_del = "070"
+    boca_abrir = str(120)
+    boca_del = "150"
     PuertoSerie.write(b'\n')
     # Grab a single frame of video
     ret, frame = video_capture.read()
@@ -145,7 +148,7 @@ while True:
     face_locations = face_recognition.face_locations(rgb_small_frame)
     #face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
     face_names = []
-    name="Unknown"
+    name=cara
 
     # Display the results
     # Scale back up face locations since the frame we detected in was scaled to 1/4 size
@@ -243,6 +246,8 @@ while True:
             response_content = response.choices[0].message.content
             ceja_der = str(100)
             ceja_izq = str(100)
+            dato = ojo_der_x + ojo_der_y + ojo_izq_x + ojo_izq_y + ceja_der + ceja_izq + boca_abrir + boca_del + "1" + "\n"
+            PuertoSerie.write(dato.encode())
             say(response_content)
 
 
@@ -250,6 +255,11 @@ while True:
             say("No te he entendido")
             ceja_izq = "100"
 
+
+
+# Release handle to the webcam
+video_capture.release()
+cv2.destroyAllWindows()
 
 
 # Release handle to the webcam
